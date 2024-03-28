@@ -1,0 +1,23 @@
+.container {
+	background-color: rgb(128, 87, 0);
+}
+.container.online {
+	border: 2px solid black;
+}
+.container.offline {
+	border: 2px solid red;
+}
+
+.card {
+	background-color: red;
+	margin: 0 auto;
+	border-radius: 12px;
+	box-shadow: 0 0 18px cyan;
+	width: 300px;
+}
+
+.cardSmall {
+	composes: card;
+	background-color: black;
+	width: 100px;
+}
