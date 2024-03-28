@@ -1,0 +1,9 @@
+.wrapper-container {
+	background-color: rgb(128, 87, 0);
+}
+.wrapper-container.online {
+	border: 2px solid black;
+}
+.wrapper-container.offline {
+	border: 2px solid red;
+}
