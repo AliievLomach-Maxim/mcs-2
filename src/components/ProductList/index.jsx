@@ -2,10 +2,10 @@ import { Component } from 'react'
 import data from '../../data.json'
 import Product from '../Product'
 import CreateProductForm from '../Forms/CreateProductForm'
-import CreateProductFormFormik from '../Forms/CreateProductFormFormik'
+// import CreateProductFormFormik from '../Forms/CreateProductFormFormik'
 
 class ProductList extends Component {
-	state = { products: data }
+	state = { products: data, counter: { asd: '' } }
 
 	handleDelete = (id) => {
 		this.setState((prev) => ({
@@ -19,14 +19,33 @@ class ProductList extends Component {
 		}))
 	}
 
+	componentDidMount() {
+		const localData = localStorage.getItem('products')
+		if (localData && JSON.parse(localData).length > 0) {
+			this.setState({ products: JSON.parse(localData) })
+		}
+	}
+
+	componentDidUpdate(prevProps, prevState) {
+		if (prevState.products.length !== this.state.products.length) {
+			localStorage.setItem('products', JSON.stringify(this.state.products))
+		}
+		if (prevState.products.length > this.state.products.length) {
+			console.log('deleted successfully')
+		} else if (prevState.products.length < this.state.products.length) {
+			console.log('created successfully')
+		}
+	}
+
 	render() {
 		return (
 			<>
-				<CreateProductForm submit={this.createNewProduct} />
+				<button onClick={() => this.setState((prev) => ({ counter: { asd: '' } }))}>0</button>
+				<CreateProductForm submit={this.createNewProduct} counter={this.state.counter} />
+				{/* <hr />
 				<hr />
+				<CreateProductFormFormik submit={this.createNewProduct} /> */}
 				<hr />
-				<hr />
-				<CreateProductFormFormik submit={this.createNewProduct} />
 				{this.state.products.map((product) => (
 					<Product product={product} key={product.id} handleDelete={this.handleDelete} />
 				))}

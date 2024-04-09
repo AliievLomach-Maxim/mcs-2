@@ -1,4 +1,4 @@
-import { Component } from 'react'
+import { Component, PureComponent } from 'react'
 
 const defaultState = {
 	title: '',
@@ -10,6 +10,19 @@ class CreateProductForm extends Component {
 	state = {
 		...defaultState,
 		isHowAlertDiv: true,
+	}
+
+	// shouldComponentUpdate(nextProps, nextState) {
+	// 	if (nextProps.submit !== this.props.submit) return true
+	// 	return false
+	// }
+
+	// componentDidMount() {
+	// 	this.setState
+	// }
+
+	componentDidUpdate(prevProps, prevState) {
+		console.log('update')
 	}
 
 	resetForm = () => {
@@ -34,7 +47,7 @@ class CreateProductForm extends Component {
 	}
 
 	render() {
-		console.log('this.state :>> ', this.state)
+		// console.log('this.state :>> ', this.state)
 		return (
 			<div className='container mb-5'>
 				<form onSubmit={this.handleSubmit}>
