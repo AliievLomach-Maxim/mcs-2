@@ -1,3 +1,6 @@
 .container {
 	background-color: green;
 }
+.loading {
+	filter: grayscale(50%);
+}
