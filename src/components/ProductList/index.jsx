@@ -1,53 +1,60 @@
 import { Component } from 'react'
-import data from '../../data.json'
 import Product from '../Product'
-import CreateProductForm from '../Forms/CreateProductForm'
-// import CreateProductFormFormik from '../Forms/CreateProductFormFormik'
+import { getProductsApi, getSearchProductsApi } from '../../api/products'
+import SearchProductForm from '../Forms/SearchProductForm/index'
 
 class ProductList extends Component {
-	state = { products: data, counter: { asd: '' } }
-
-	handleDelete = (id) => {
-		this.setState((prev) => ({
-			products: prev.products.filter((el) => el.id !== id),
-		}))
-	}
-
-	createNewProduct = (newProdObj) => {
-		this.setState((prev) => ({
-			products: [{ ...newProdObj, id: Date.now() }, ...prev.products],
-		}))
-	}
+	state = { products: [], isLoading: false, error: '', searchValue: '' }
 
 	componentDidMount() {
-		const localData = localStorage.getItem('products')
-		if (localData && JSON.parse(localData).length > 0) {
-			this.setState({ products: JSON.parse(localData) })
-		}
+		this.getProducts()
+		// getProductsApi().then((data) => console.log('data :>> ', data)).catch
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		if (prevState.products.length !== this.state.products.length) {
-			localStorage.setItem('products', JSON.stringify(this.state.products))
-		}
-		if (prevState.products.length > this.state.products.length) {
-			console.log('deleted successfully')
-		} else if (prevState.products.length < this.state.products.length) {
-			console.log('created successfully')
+		if (prevState.searchValue !== this.state.searchValue)
+			this.state.searchValue ? this.getSearchProducts() : this.getProducts()
+
+		// if (prevState.searchValue !== this.state.searchValue && this.state.searchValue)
+		// 	this.getSearchProducts()
+		// if (prevState.searchValue !== this.state.searchValue && !this.state.searchValue)
+		// 	this.getProducts()
+	}
+
+	getSearchProducts = async () => {
+		try {
+			this.setState({ isLoading: true, error: '' })
+			const data = await getSearchProductsApi(this.state.searchValue)
+			this.setState({ products: data.products, isLoading: false })
+		} catch (error) {
+			this.setState({ error: error.message, isLoading: false })
 		}
 	}
 
+	getProducts = async () => {
+		try {
+			this.setState({ isLoading: true, error: '' })
+			const data = await getProductsApi()
+			this.setState({ products: data.products, isLoading: false })
+		} catch (error) {
+			this.setState({ error: error.message, isLoading: false })
+		}
+	}
+
+	search = (searchValue) => {
+		this.setState({ searchValue })
+	}
+
 	render() {
+		const { isLoading, products, error } = this.state
 		return (
 			<>
-				<button onClick={() => this.setState((prev) => ({ counter: { asd: '' } }))}>0</button>
-				<CreateProductForm submit={this.createNewProduct} counter={this.state.counter} />
-				{/* <hr />
+				{isLoading && <h1>Loading...</h1>}
+				{error && <h1>{error}</h1>}
+				<SearchProductForm search={this.search} />
 				<hr />
-				<CreateProductFormFormik submit={this.createNewProduct} /> */}
-				<hr />
-				{this.state.products.map((product) => (
-					<Product product={product} key={product.id} handleDelete={this.handleDelete} />
+				{products.map((product) => (
+					<Product product={product} key={product.id} />
 				))}
 			</>
 		)

@@ -1,4 +1,4 @@
-import { Component, PureComponent } from 'react'
+import { Component } from 'react'
 
 const defaultState = {
 	title: '',
@@ -12,42 +12,22 @@ class CreateProductForm extends Component {
 		isHowAlertDiv: true,
 	}
 
-	// shouldComponentUpdate(nextProps, nextState) {
-	// 	if (nextProps.submit !== this.props.submit) return true
-	// 	return false
-	// }
-
-	// componentDidMount() {
-	// 	this.setState
-	// }
-
-	componentDidUpdate(prevProps, prevState) {
-		console.log('update')
-	}
-
 	resetForm = () => {
 		this.setState(defaultState)
 	}
 
 	handleSubmit = (e) => {
 		e.preventDefault()
-		// this.props.submit({
-		//     ...this.state
-		// })
 		const { price, description, title } = this.state
 		this.props.submit({ price, description, title })
 		this.resetForm()
 	}
 
 	handleChange = ({ target: { value, name } }) => {
-		// if (value.includes('@')) return
-		// if (name === 'title') this.setState({ [name]: value })
-		// if (name === 'description') this.setState({ dscription: value })
 		this.setState({ [name]: value })
 	}
 
 	render() {
-		// console.log('this.state :>> ', this.state)
 		return (
 			<div className='container mb-5'>
 				<form onSubmit={this.handleSubmit}>
