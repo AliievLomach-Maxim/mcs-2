@@ -1,64 +1,85 @@
-import { Component } from 'react'
-import Product from '../Product'
-import { getProductsApi, getSearchProductsApi } from '../../api/products'
+import { useEffect, useState } from 'react'
+import { getProductsApi, getSearchProductsApi } from '../../api/products/index'
 import SearchProductForm from '../Forms/SearchProductForm/index'
+import Product from '../Product/index'
 
-class ProductList extends Component {
-	state = { products: [], isLoading: false, error: '', searchValue: '' }
+const ProductList = () => {
+	// state = { products: [], isLoading: false, error: '', searchValue: '' }
 
-	componentDidMount() {
-		this.getProducts()
-		// getProductsApi().then((data) => console.log('data :>> ', data)).catch
-	}
+	const [products, setProducts] = useState([])
+	const [isLoading, setIsLoading] = useState(false)
+	const [error, setError] = useState('')
+	const [searchValue, setSearchValue] = useState('')
 
-	componentDidUpdate(prevProps, prevState) {
-		if (prevState.searchValue !== this.state.searchValue)
-			this.state.searchValue ? this.getSearchProducts() : this.getProducts()
+	// useEffect(() => {
+	// 	console.log('effect')
+	// })
 
-		// if (prevState.searchValue !== this.state.searchValue && this.state.searchValue)
-		// 	this.getSearchProducts()
-		// if (prevState.searchValue !== this.state.searchValue && !this.state.searchValue)
-		// 	this.getProducts()
-	}
+	// componentDidMount() {
+	// 	this.getProducts()
+	// }
 
-	getSearchProducts = async () => {
-		try {
-			this.setState({ isLoading: true, error: '' })
-			const data = await getSearchProductsApi(this.state.searchValue)
-			this.setState({ products: data.products, isLoading: false })
-		} catch (error) {
-			this.setState({ error: error.message, isLoading: false })
+	// useEffect(() => {
+	// 	getProducts()
+	// }, [])
+
+	useEffect(() => {
+		const getSearchProducts = async () => {
+			try {
+				// this.setState({ isLoading: true, error: '' })
+				setIsLoading(true)
+				setError('')
+
+				const data = await getSearchProductsApi(searchValue)
+				// this.setState({ products: data.products, isLoading: false })
+				setProducts(data.products)
+			} catch (error) {
+				setError(error.message)
+				// this.setState({ error: error.message, isLoading: false })
+			} finally {
+				setIsLoading(false)
+			}
 		}
-	}
+		searchValue ? getSearchProducts() : getProducts()
+	}, [searchValue])
 
-	getProducts = async () => {
+	// componentDidUpdate(prevProps, prevState) {
+	// 	if (prevState.searchValue !== this.state.searchValue)
+	// 		this.state.searchValue ? this.getSearchProducts() : this.getProducts()
+	// }
+
+	const getProducts = async () => {
 		try {
-			this.setState({ isLoading: true, error: '' })
+			setIsLoading(true)
+			setError('')
 			const data = await getProductsApi()
-			this.setState({ products: data.products, isLoading: false })
+			setProducts(data.products)
 		} catch (error) {
-			this.setState({ error: error.message, isLoading: false })
+			setError(error.message)
+		} finally {
+			setIsLoading(false)
 		}
+		// 	this.setState({ products: data.products, isLoading: false })
+		// } catch (error) {
+		// 	this.setState({ error: error.message, isLoading: false })
+		// }
 	}
 
-	search = (searchValue) => {
-		this.setState({ searchValue })
+	const search = (searchValue) => {
+		// this.setState({ searchValue })
+		setSearchValue(searchValue)
 	}
-
-	render() {
-		const { isLoading, products, error } = this.state
-		return (
-			<>
-				{isLoading && <h1>Loading...</h1>}
-				{error && <h1>{error}</h1>}
-				<SearchProductForm search={this.search} />
-				<hr />
-				{products.map((product) => (
-					<Product product={product} key={product.id} />
-				))}
-			</>
-		)
-	}
+	return (
+		<>
+			{isLoading && <h1>Loading...</h1>}
+			{error && <h1>{error}</h1>}
+			<SearchProductForm search={search} />
+			<hr />
+			{products.map((product) => (
+				<Product product={product} key={product.id} />
+			))}
+		</>
+	)
 }
 
 export default ProductList
