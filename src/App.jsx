@@ -1,25 +1,57 @@
+import { useEffect, useState } from 'react'
 import Header from './components/Header/Header'
 import Modal from './components/Modal/Modal'
-import { Component } from 'react'
 import ProductList from './components/ProductList'
 import './style.css'
 
-class App extends Component {
-	state = { isShowModal: false, counter: 0 }
+const App = () => {
+	const [isShowModal, setIsShowModal] = useState(false)
+	const [values, setValues] = useState([])
 
-	toggleModal = () => {
-		this.setState((prev) => ({ isShowModal: !prev.isShowModal }))
+	const toggleModal = () => {
+		setIsShowModal((prev) => !prev)
 	}
 
-	render() {
-		return (
-			<>
-				<Header openModal={this.toggleModal} />
-				<ProductList />
-				{this.state.isShowModal && <Modal closeModal={this.toggleModal}>qwtreuiyquwteqwu</Modal>}
-			</>
-		)
-	}
+	// cdm+cdu without if()
+	// useEffect(() => {
+	// 	console.log('effect')
+	// })
+	// console.log('effect')
+
+	// cdm
+	// useEffect(() => {
+	// 	console.log('effect')
+	// }, [])
+
+	// cdm+cdu with if()
+	// useEffect(() => {
+	// 	console.log('effect')
+	// }, [isShowModal])
+
+	// cdu with if()
+	// useEffect(() => {
+	// 	if (values.length) console.log('effect')
+	// }, [values])
+
+	// componentDidMount() {
+	// 	console.log('effect')
+	// }
+
+	// componentDidUpdate(prevProps, prevState) {
+	// 	console.log('effect')
+	// }
+	// componentDidUpdate(prevProps, prevState) {
+	// 	if(isShowModal!==prev)
+	// 	console.log('effect')
+	// }
+
+	return (
+		<>
+			<Header openModal={toggleModal} />
+			<ProductList />
+			{isShowModal && <Modal closeModal={toggleModal}>qwtreuiyquwteqwu</Modal>}
+		</>
+	)
 }
 
 export default App
