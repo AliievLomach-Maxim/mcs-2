@@ -1,52 +1,38 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { getProductsApi, getSearchProductsApi } from '../../api/products/index'
 import SearchProductForm from '../Forms/SearchProductForm/index'
 import Product from '../Product/index'
 
 const ProductList = () => {
-	// state = { products: [], isLoading: false, error: '', searchValue: '' }
+	const [counter, setCounter] = useState(0)
 
 	const [products, setProducts] = useState([])
 	const [isLoading, setIsLoading] = useState(false)
 	const [error, setError] = useState('')
 	const [searchValue, setSearchValue] = useState('')
 
-	// useEffect(() => {
-	// 	console.log('effect')
-	// })
+	// const result = useCallback(()=>{
 
-	// componentDidMount() {
-	// 	this.getProducts()
-	// }
+	// },[])
 
-	// useEffect(() => {
-	// 	getProducts()
-	// }, [])
+	const getSearchProducts = useCallback(async () => {
+		try {
+			setIsLoading(true)
+			setError('')
 
-	useEffect(() => {
-		const getSearchProducts = async () => {
-			try {
-				// this.setState({ isLoading: true, error: '' })
-				setIsLoading(true)
-				setError('')
+			const data = await getSearchProductsApi(searchValue)
 
-				const data = await getSearchProductsApi(searchValue)
-				// this.setState({ products: data.products, isLoading: false })
-				setProducts(data.products)
-			} catch (error) {
-				setError(error.message)
-				// this.setState({ error: error.message, isLoading: false })
-			} finally {
-				setIsLoading(false)
-			}
+			setProducts(data.products)
+		} catch (error) {
+			setError(error.message)
+		} finally {
+			setIsLoading(false)
 		}
-		searchValue ? getSearchProducts() : getProducts()
 	}, [searchValue])
 
-	// componentDidUpdate(prevProps, prevState) {
-	// 	if (prevState.searchValue !== this.state.searchValue)
-	// 		this.state.searchValue ? this.getSearchProducts() : this.getProducts()
-	// }
+	useEffect(() => {
+		searchValue ? getSearchProducts() : getProducts()
+	}, [getSearchProducts, searchValue])
 
 	const getProducts = async () => {
 		try {
@@ -59,23 +45,47 @@ const ProductList = () => {
 		} finally {
 			setIsLoading(false)
 		}
-		// 	this.setState({ products: data.products, isLoading: false })
-		// } catch (error) {
-		// 	this.setState({ error: error.message, isLoading: false })
-		// }
 	}
 
 	const search = (searchValue) => {
-		// this.setState({ searchValue })
 		setSearchValue(searchValue)
 	}
+
+	const hCLick = () => {
+		getSearchProducts()
+	}
+
+	// const sortedProducts = products.toSorted((a, b) => {
+	// 	console.log('sorting')
+	// 	for (let i = 0; i < 1000000; i++) {}
+	// 	return a.price - b.price
+	// })
+
+	const sortedProducts = useMemo(() => {
+		return products.toSorted((a, b) => {
+			console.log('sorting')
+			for (let i = 0; i < 1000000; i++) {}
+			return a.price - b.price
+		})
+	}, [products])
+	const h1ref = useRef(null)
+	const counterRef = useRef(0)
+
+	useEffect(() => {
+		if (counterRef.current) counterRef.current = 10
+	}, [])
+
+	console.log('counterRef.current :>> ', counterRef.current)
 	return (
 		<>
-			{isLoading && <h1>Loading...</h1>}
+			<button onClick={() => setCounter((prev) => prev + 1)} style={{ fontSize: '42px' }}>
+				{counter}
+			</button>
+			{isLoading && <h1 ref={h1ref}>Loading...</h1>}
 			{error && <h1>{error}</h1>}
 			<SearchProductForm search={search} />
 			<hr />
-			{products.map((product) => (
+			{sortedProducts.map((product) => (
 				<Product product={product} key={product.id} />
 			))}
 		</>

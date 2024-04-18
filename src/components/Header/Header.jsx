@@ -1,4 +1,11 @@
-const Header = ({ openModal }) => {
+import { useContext } from 'react'
+import { GlobalContext } from '../../App'
+import { useGlobalContext } from '../../context/GlobalProvider'
+
+const Header = () => {
+	// const { toggleModal: openModal } = useContext(GlobalContext)
+	const { toggleModal: openModal } = useGlobalContext()
+
 	return (
 		<nav className='navbar bg-dark mb-3'>
 			<div className='container-fluid'>
