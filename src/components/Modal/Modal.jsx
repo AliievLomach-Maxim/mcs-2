@@ -1,6 +1,11 @@
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
+import { GlobalContext } from '../../App'
+import { useGlobalContext } from '../../context/GlobalProvider'
 
-const Modal = ({ closeModal, children }) => {
+const Modal = ({ children }) => {
+	// const { isShowModal, toggleModal: closeModal } = useContext(GlobalContext)
+	const { isShowModal, toggleModal: closeModal } = useGlobalContext()
+
 	const handleEsc = ({ code }) => {
 		console.log('press esc')
 		if (code === 'Escape') this.props.closeModal()
@@ -18,21 +23,26 @@ const Modal = ({ closeModal, children }) => {
 	// 	document.removeEventListener('keydown', this.handleEsc)
 	// }
 	return (
-		<div className='modal fade show' style={{ display: 'block', backdropFilter: 'blur(5px)' }}>
-			<div className='modal-dialog'>
-				<div className='modal-content'>
-					<div className='modal-header'>
-						<h5 className='modal-title'> Modal</h5>
-						<button
-							type='button'
-							className='btn-close'
-							aria-label='Close'
-							onClick={closeModal}></button>
+		isShowModal && (
+			<div className='modal fade show' style={{ display: 'block', backdropFilter: 'blur(5px)' }}>
+				<div className='modal-dialog'>
+					<div className='modal-content'>
+						<div className='modal-header'>
+							<h5 className='modal-title'> Modal</h5>
+							<button
+								type='button'
+								className='btn-close'
+								aria-label='Close'
+								onClick={closeModal}></button>
+						</div>
+						<div className='modal-body'>
+							{children}
+							{isShowModal && 'isShowModal'}
+						</div>
 					</div>
-					<div className='modal-body'>{children}</div>
 				</div>
 			</div>
-		</div>
+		)
 	)
 }
 
