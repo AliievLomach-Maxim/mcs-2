@@ -1,9 +1,7 @@
-import React, { useContext, useEffect } from 'react'
-import { GlobalContext } from '../../App'
+import React, { useEffect } from 'react'
 import { useGlobalContext } from '../../context/GlobalProvider'
 
 const Modal = ({ children }) => {
-	// const { isShowModal, toggleModal: closeModal } = useContext(GlobalContext)
 	const { isShowModal, toggleModal: closeModal } = useGlobalContext()
 
 	const handleEsc = ({ code }) => {
@@ -16,12 +14,6 @@ const Modal = ({ children }) => {
 		return () => document.removeEventListener('keydown', handleEsc)
 	}, [])
 
-	// componentDidMount() {
-	// }
-
-	// componentWillUnmount() {
-	// 	document.removeEventListener('keydown', this.handleEsc)
-	// }
 	return (
 		isShowModal && (
 			<div className='modal fade show' style={{ display: 'block', backdropFilter: 'blur(5px)' }}>
