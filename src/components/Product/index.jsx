@@ -1,8 +1,8 @@
-import React, { useContext } from 'react'
-import { GlobalContext } from '../../App'
+import React from 'react'
 import { useGlobalContext } from '../../context/GlobalProvider'
+import { Link } from 'react-router-dom'
 
-const Product = ({ product }) => {
+const Product = ({ product, isShowDetails }) => {
 	// const { toggleModal } = useContext(GlobalContext)
 	const { toggleModal } = useGlobalContext()
 	return (
@@ -13,6 +13,7 @@ const Product = ({ product }) => {
 				<button className='btn btn-success' onClick={toggleModal}>
 					{product.price} $
 				</button>
+				{!isShowDetails && <Link to={`${product.id}`}>Details</Link>}
 				{/* <button className='btn btn-danger' onClick={() => handleDelete(product.id)}>
 						Delete
 					</button> */}

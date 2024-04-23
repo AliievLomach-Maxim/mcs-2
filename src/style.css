@@ -4,3 +4,6 @@
 .loading {
 	filter: grayscale(50%);
 }
+.active {
+	color: red;
+}
