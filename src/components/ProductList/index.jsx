@@ -1,21 +1,18 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { getProductsApi, getSearchProductsApi } from '../../api/products/index'
 import SearchProductForm from '../Forms/SearchProductForm/index'
 import Product from '../Product/index'
+import { useLocation, useSearchParams } from 'react-router-dom'
 
 const ProductList = () => {
-	const [counter, setCounter] = useState(0)
-
 	const [products, setProducts] = useState([])
 	const [isLoading, setIsLoading] = useState(false)
 	const [error, setError] = useState('')
-	const [searchValue, setSearchValue] = useState('')
+	// const [searchValue, setSearchValue] = useState('')
 
-	// const result = useCallback(()=>{
+	const [searchParams] = useSearchParams()
 
-	// },[])
-
-	const getSearchProducts = useCallback(async () => {
+	const getSearchProducts = async (searchValue) => {
 		try {
 			setIsLoading(true)
 			setError('')
@@ -28,11 +25,19 @@ const ProductList = () => {
 		} finally {
 			setIsLoading(false)
 		}
-	}, [searchValue])
+	}
+
+	// useEffect(() => {
+	// 	searchValue ? getSearchProducts() : getProducts()
+	// }, [getSearchProducts, searchValue])
 
 	useEffect(() => {
-		searchValue ? getSearchProducts() : getProducts()
-	}, [getSearchProducts, searchValue])
+		const searchValue = searchParams.get('search')
+		searchValue ? getSearchProducts(searchValue) : getProducts()
+	}, [searchParams])
+
+	// const location = useLocation()
+	// console.log('location :>> ', location)
 
 	const getProducts = async () => {
 		try {
@@ -47,9 +52,9 @@ const ProductList = () => {
 		}
 	}
 
-	const search = (searchValue) => {
-		setSearchValue(searchValue)
-	}
+	// const search = (searchValue) => {
+	// 	setSearchValue(searchValue)
+	// }
 
 	const hCLick = () => {
 		getSearchProducts()
@@ -68,22 +73,12 @@ const ProductList = () => {
 			return a.price - b.price
 		})
 	}, [products])
-	const h1ref = useRef(null)
-	const counterRef = useRef(0)
 
-	useEffect(() => {
-		if (counterRef.current) counterRef.current = 10
-	}, [])
-
-	console.log('counterRef.current :>> ', counterRef.current)
 	return (
 		<>
-			<button onClick={() => setCounter((prev) => prev + 1)} style={{ fontSize: '42px' }}>
-				{counter}
-			</button>
-			{isLoading && <h1 ref={h1ref}>Loading...</h1>}
+			{isLoading && <h1>Loading...</h1>}
 			{error && <h1>{error}</h1>}
-			<SearchProductForm search={search} />
+			<SearchProductForm />
 			<hr />
 			{sortedProducts.map((product) => (
 				<Product product={product} key={product.id} />

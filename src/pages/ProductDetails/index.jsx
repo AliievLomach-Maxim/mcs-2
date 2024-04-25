@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { getSingleProductApi } from '../../api/products'
 import Product from '../../components/Product'
 
@@ -8,6 +8,10 @@ const ProductDetails = () => {
 	const [isLoading, setIsLoading] = useState(false)
 	const [error, setError] = useState('')
 	const [product, setProduct] = useState(null)
+
+	const navigate = useNavigate()
+
+	const location = useLocation()
 
 	useEffect(() => {
 		const getSingleProduct = async () => {
@@ -24,23 +28,18 @@ const ProductDetails = () => {
 		userId && getSingleProduct()
 	}, [userId])
 
+	const handleClick = () => {
+		const res = window.confirm('are')
+		res && navigate(location.state ?? '/product')
+	}
+
 	return (
 		<div className='container-fluid'>
 			{isLoading && <h1>Loading...</h1>}
 			{error && <h1>{error}</h1>}
-			{product && (
-				<Product product={product} isShowDetails />
-				// <div className='card p-3 mb-2' style={{ width: '300px' }}>
-				// 	<h5>{product.title}</h5>
-				// 	<p>{product.description}</p>
-				// 	<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-				// 		<button className='btn btn-success'>{product.price} $</button>
-				// 		{/* <button className='btn btn-danger' onClick={() => handleDelete(product.id)}>
-				// 		Delete
-				// 	</button> */}
-				// 	</div>
-				// </div>
-			)}
+			<Link to={location.state ?? '/product'}>Go back</Link>
+			<button onClick={handleClick}>GoBack</button>
+			{product && <Product product={product} isShowDetails />}
 		</div>
 	)
 }
