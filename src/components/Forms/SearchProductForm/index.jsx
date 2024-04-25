@@ -1,34 +1,39 @@
-import { Component } from 'react'
+import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 
-class SearchProductForm extends Component {
-	// state = { value: '' }
+const SearchProductForm = () => {
+	const [value, setValue] = useState('')
+	const [searchParams, setSearchParams] = useSearchParams()
 
-	handleChange = ({ target: { value } }) => {
-		// this.setState({ value })
-		this.props.search(value)
+	const handleChange = ({ target: { value } }) => {
+		setValue(value)
 	}
 
-	handleSubmit = (e) => {
+	useEffect(() => {
+		const value = searchParams.get('search')
+		value && setValue(value)
+	}, [searchParams])
+
+	const handleSubmit = (e) => {
 		e.preventDefault()
+		setSearchParams({ search: value })
 	}
-	render() {
-		return (
-			<form className='d-flex' role='search' onSubmit={this.handleSubmit}>
-				<input
-					className='form-control me-2'
-					name='search'
-					type='search'
-					placeholder='Search'
-					aria-label='Search'
-					onChange={this.handleChange}
-					// value={this.state.value}
-				/>
-				<button className='btn btn-outline-success' type='submit'>
-					Search
-				</button>
-			</form>
-		)
-	}
+	return (
+		<form className='d-flex' role='search' onSubmit={handleSubmit}>
+			<input
+				className='form-control me-2'
+				name='search'
+				type='search'
+				placeholder='Search'
+				aria-label='Search'
+				onChange={handleChange}
+				value={value}
+			/>
+			<button className='btn btn-outline-success' type='submit'>
+				Search
+			</button>
+		</form>
+	)
 }
 
 export default SearchProductForm
