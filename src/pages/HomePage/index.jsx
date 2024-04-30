@@ -1,5 +1,25 @@
+import { useDispatch, useSelector } from 'react-redux'
+import { addUserAction, usersAction } from '../../store/users/actions'
+
 const HomePage = () => {
-	return <div>HomePage</div>
+	const data = useSelector((state) => state.users)
+	const dispatch = useDispatch()
+
+	console.log('data :>> ', data)
+
+	const handleDispatch = () => {
+		// dispatch({ type: USERS, payload: [123] })
+		dispatch(usersAction([123]))
+	}
+	// dispatch({ type: ADD_USER, payload: [321] })
+	// dispatch(addUserAction([321]))
+
+	return (
+		<div>
+			HomePage
+			<button onClick={handleDispatch}>Action</button>
+		</div>
+	)
 }
 
 export default HomePage
