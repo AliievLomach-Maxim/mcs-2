@@ -1,21 +1,17 @@
-import { createStore } from 'redux'
+import { configureStore } from '@reduxjs/toolkit'
 import { reducer } from './reducer'
+import { persistStore } from 'redux-persist'
+// import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
 
-// const reducer = (state, action) => {
-// 	if (action.type === 'number') return { ...state, number: action.payload }
-// 	// else if (action.type === 'users') return { ...state, users: action.payload }
-// 	else if (action.type === 'products') return { ...state, products: action.payload }
-// 	else return state
+// const persistConfig = {
+// 	key: 'todo',
+// 	storage,
+// 	// whitelist: ['todo'],
+// 	// blacklist: [''],
 // }
 
-// export const store = createStore(reducer, { number: 10, users: [], products: [] })
-export const store = createStore(reducer)
-// console.log('store :>> ', store.getState())
+// const persistedReducer = persistReducer(persistConfig, reducer)
 
-// store.dispatch({ type: 'number', payload: 123 })
-// store.dispatch({ type: 'users', payload: [123] })
-// store.dispatch({ type: 'products', payload: [123] })
-
-// console.log('store :>> ', store.getState())
-
-// const [first, setfirst] = useState(10)
+// export const store = configureStore({ reducer: persistedReducer })
+export const store = configureStore({ reducer })
+export const persistor = persistStore(store)

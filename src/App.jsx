@@ -5,6 +5,7 @@ import { Route, Routes } from 'react-router-dom'
 // import MainLayout from './layouts/MainLayout'
 // import ProductDetails from './pages/ProductDetails'
 import { Suspense, lazy } from 'react'
+import TodoPage from './pages/TodoPage'
 
 const ProductDetails = lazy(() => import('./pages/ProductDetails'))
 const HomePage = lazy(() => import('./pages/HomePage'))
@@ -21,6 +22,7 @@ const App = () => {
 					<Route path='product' element={<ProductPage />} />
 					<Route path='product/:userId' element={<ProductDetails />} />
 					<Route path='user' element={<UserPage />} />
+					<Route path='todo' element={<TodoPage />} />
 				</Route>
 
 				<Route path='/404' element={<div>Error 404</div>} />

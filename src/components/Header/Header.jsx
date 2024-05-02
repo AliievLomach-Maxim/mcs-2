@@ -20,6 +20,10 @@ const Header = () => {
 					<li>
 						<NavLink to='/user'>User</NavLink>
 					</li>
+
+					<li>
+						<NavLink to='/todo'>Todo</NavLink>
+					</li>
 				</ul>
 				<button className='btn btn-outline-success' onClick={openModal}>
 					Open Modal
