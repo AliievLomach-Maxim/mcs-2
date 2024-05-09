@@ -15,12 +15,12 @@ const handleFulfilled = (state) => {
 	state.isLoading = false
 }
 
-export const productsAction = createAsyncThunk('getProducts', () => getProductsApi())
-export const createProductAction = createAsyncThunk('createProducts', () => getProductsApi())
+export const productsAction = createAsyncThunk('get/products', () => getProductsApi())
+export const createProductAction = createAsyncThunk('create/products', () => getProductsApi())
 
 const productsSlice = createSlice({
 	name: 'products',
-	initialState: { products: null, product: null, isLoading: false, error: '' },
+	initialState: { products: null, product: null, isLoading: false, error: '', filter: '' },
 
 	extraReducers: (builder) => {
 		builder
@@ -30,9 +30,9 @@ const productsSlice = createSlice({
 			.addCase(createProductAction.fulfilled, (state, { payload }) => {
 				state.product = payload.product
 			})
-			.addMatcher((action) => action.type.endsWith('/pending'), handlePending)
-			.addMatcher((action) => action.type.endsWith('/rejected'), handleRejected)
-			.addMatcher((action) => action.type.endsWith('/fulfilled'), handleFulfilled)
+			.addMatcher((action) => action.type.endsWith('products/pending'), handlePending)
+			.addMatcher((action) => action.type.endsWith('products/rejected'), handleRejected)
+			.addMatcher((action) => action.type.endsWith('products/fulfilled'), handleFulfilled)
 	},
 	// extraReducers: (builder) => {
 	// 	builder

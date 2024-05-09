@@ -1,21 +1,22 @@
 import React, { useEffect } from 'react'
 import { useGlobalContext } from '../../context/GlobalProvider'
+import { createPortal } from 'react-dom'
 
 const Modal = ({ children }) => {
 	const { isShowModal, toggleModal: closeModal } = useGlobalContext()
 
-	const handleEsc = ({ code }) => {
-		console.log('press esc')
-		if (code === 'Escape') this.props.closeModal()
-	}
-
 	useEffect(() => {
+		const handleEsc = ({ code }) => {
+			console.log('press esc')
+			if (code === 'Escape') closeModal()
+		}
 		document.addEventListener('keydown', handleEsc)
 		return () => document.removeEventListener('keydown', handleEsc)
-	}, [])
+	}, [closeModal])
 
 	return (
-		isShowModal && (
+		isShowModal &&
+		createPortal(
 			<div className='modal fade show' style={{ display: 'block', backdropFilter: 'blur(5px)' }}>
 				<div className='modal-dialog'>
 					<div className='modal-content'>
@@ -33,7 +34,8 @@ const Modal = ({ children }) => {
 						</div>
 					</div>
 				</div>
-			</div>
+			</div>,
+			document.getElementById('modal-root')
 		)
 	)
 }
