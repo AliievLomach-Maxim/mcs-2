@@ -4,6 +4,7 @@ import { userReducer } from './users/slice'
 import persistReducer from 'redux-persist/es/persistReducer'
 import storage from 'redux-persist/lib/storage'
 import { productsReducer } from './products/slice'
+import { rootReducer } from './root/slice'
 
 const persistConfig = {
 	key: 'todo',
@@ -15,4 +16,5 @@ export const reducer = {
 	users: userReducer,
 	products: productsReducer,
 	todo: persistedReducer,
+	root: rootReducer,
 }
